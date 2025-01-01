@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/PostSphere-backend-0.0.1-SNAPSHOT.jar PostSphere-backend.jar
+COPY --from=build /target/kutlwano-0.0.1-SNAPSHOT.jar kutlwano.jar
 EXPOSE 8080
 ENTRYPOINT [ "java", "-jar" , "PostSphere-backend.jar"]
