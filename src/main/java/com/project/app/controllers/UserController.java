@@ -12,7 +12,7 @@ import com.project.app.services.UserServices;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://post-sphere-app.onrender.com")
 public class UserController {
     
     @Autowired
