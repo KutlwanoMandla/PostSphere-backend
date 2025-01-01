@@ -4,8 +4,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,7 @@ import io.jsonwebtoken.io.IOException;
 @RestController
 @RequestMapping("/api/posts")
 @CrossOrigin(origins = "https://post-sphere-app.onrender.com")
+@Transactional(readOnly = true)
 public class PostController {
 
     @Autowired
@@ -88,6 +91,11 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         List<Post> posts = postServices.getAllPosts();
+
+        posts.forEach(post -> {
+                Hibernate.initialize(post.getComments());
+                Hibernate.initialize(post.getLikes());
+            });
 
         List<PostDTO> postDTOs = posts.stream()
                 .map(this::convertToPostDTO)

@@ -22,7 +22,10 @@ import com.project.app.repositories.LikeRepo;
 import com.project.app.repositories.PostRepo;
 import com.project.app.repositories.UserRepo;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class PostServices {
 
     @Autowired
