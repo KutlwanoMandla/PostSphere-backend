@@ -31,9 +31,9 @@ public class Post {
     @Column(name = "intro", nullable = false, length = 500)
     private String intro;
 
-    @Lob
+    // @Lob
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    @Basic(fetch = FetchType.LAZY)
+    // @Basic(fetch = FetchType.LAZY)
     private String content;
 
     @Column(name = "created_at", nullable = false)
@@ -47,10 +47,10 @@ public class Post {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER) // cascade = CascadeType.ALL is giving me a problem. It saves every comment twice.
+    @OneToMany(mappedBy = "post") // cascade = CascadeType.ALL is giving me a problem. It saves every comment twice.
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes;
 
     public Post() {}

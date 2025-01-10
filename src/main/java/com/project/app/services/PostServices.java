@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,8 +22,6 @@ import com.project.app.repositories.CommentRepo;
 import com.project.app.repositories.LikeRepo;
 import com.project.app.repositories.PostRepo;
 import com.project.app.repositories.UserRepo;
-
-import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
@@ -64,6 +63,7 @@ public class PostServices {
         return postRepo.save(post);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Post> getPostById(Long postId) {
         return postRepo.findById(postId);
     }
@@ -87,6 +87,7 @@ public class PostServices {
         return commentRepo.save(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
         return postRepo.findAll();
     }
@@ -140,9 +141,15 @@ public class PostServices {
         }
     }
 
-    public void deletePost(Long postId){
+    public void deletePost(Long postId) {
         Post post = getPostById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
+        
+        // Delete the thumbnail from Cloudinary if it exists
+        if (post.getThumbnail() != null && !post.getThumbnail().isEmpty()) {
+            imageService.deleteImage(post.getThumbnail());
+        }
+        
         postRepo.delete(post);
     }
 
